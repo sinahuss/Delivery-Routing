@@ -4,21 +4,19 @@ from HashTable import HashTable
 
 
 def main():
+    table = import_files()
+
+    for i in range(1, 10):
+        print(i, table.get_value(i))
+
+def import_files():
     table = HashTable()
-    # package = (89234, ['address', 'deadline', 'city', 'zip code', 'weight', 'status'])
-    #
-    # table.set_value(package[0], package[1])
-    #
-    # print(package[0], table.get_value(package[0]))
-
-    import_files(table)
-
-def import_files(table: HashTable):
     with open('Docs/WGUPS Package File.csv', mode='r') as file:
         csv_file = csv.reader(file)
         for line in csv_file:
-            print(line[0], line[1:])
+            table.set_value(int(line[0]), line[1:])
 
+    return table
 
 
 if __name__ == '__main__':
