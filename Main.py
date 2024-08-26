@@ -10,6 +10,9 @@ from HashTable import HashTable
 def main():
     packages = load_packages()
     address_table, distance_table = load_distance_table()
+    truck1 = [1, 2, 4, 7, 13, 14, 15, 16, 19, 20, 21, 29, 33, 34, 39, 40]
+    truck2 = [3, 5, 8, 10, 11, 12, 18, 23, 30, 36, 37, 38]
+    truck3 = [6, 17, 22, 24, 25, 26, 28, 31, 32]
 
     print(get_distance(address_table, distance_table, '4001 South 700 East', '1060 Dalton Ave S'))
 
@@ -18,8 +21,15 @@ def main():
 
     print(get_delivery_status(packages, 6, '10:00')[0].strftime('%H:%M'))
 
-def deliver_packages(packages, address_table, distance_table):
-    return
+# Deliver the packages of a given truck
+# Returns ending time and total distance of the truck
+def deliver_packages(truck, start_time, packages, address_table, distance_table):
+    current_time = start_time
+    total_distance = 0
+
+
+
+    return current_time, total_distance
 
 # Get the delivery status of a given package at a given time
 # First find the package, then its status history
@@ -37,6 +47,18 @@ def get_delivery_status(packages, package_id, time_str):
         previous_status = status_time, status
 
     return previous_status
+
+# Access index of both addresses from address table
+# Distance from A to B is same as B to A, so if the distance is empty,
+# swap the indexes and get the distance
+def get_distance(address_table, distance_table, first_address, second_address):
+    first_index = address_table.get_value(first_address)
+    second_index = address_table.get_value(second_address)
+
+    if distance_table[first_index][second_index]:
+        return float(distance_table[first_index][second_index])
+    else:
+        return float(distance_table[second_index][first_index])
 
 # Read csv file and add each package to packages HashTable
 # The package ID will be the key, and it is the first number on each line
@@ -73,18 +95,6 @@ def load_distance_table():
             distance_table.append(line[1:])
 
     return address_table, distance_table
-
-# Access index of both addresses from address table
-# Distance from A to B is same as B to A, so if the distance is empty,
-# swap the indexes and get the distance
-def get_distance(address_table, distance_table, first_address, second_address):
-    first_index = address_table.get_value(first_address)
-    second_index = address_table.get_value(second_address)
-
-    if distance_table[first_index][second_index]:
-        return float(distance_table[first_index][second_index])
-    else:
-        return float(distance_table[second_index][first_index])
 
 if __name__ == '__main__':
     main()
