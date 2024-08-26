@@ -1,3 +1,6 @@
+# Student ID: 011808943
+# C950 - Data Structures and Algorithms II
+
 import csv
 
 from HashTable import HashTable
@@ -9,8 +12,11 @@ def main():
 
     print(get_distance(address_table, distance_table, '4001 South 700 East', '1060 Dalton Ave S'))
 
-    # for i in range(1, 10):
-    #     print(i, packages.get_value(i))
+    for i in range(1, 10):
+        print(i, packages.get_value(i))
+
+def deliver_packages(packages, address_table, distance_table):
+    return
 
 # Read csv file and add each package to packages HashTable
 # The package ID will be the key, and it is the first number on each line
@@ -20,7 +26,10 @@ def load_packages():
     with open('Docs/WGUPS Package File.csv', mode='r') as file:
         csv_file = csv.reader(file)
         for line in csv_file:
-            packages.set_value(int(line[0]), line[1:])
+            package_details = line[1:]
+            package_details.append([('08:00', 'At the hub')])
+            # packages.set_value(int(line[0]), [line[1:], [('8:00', 'At the hub')]])
+            packages.set_value(int(line[0]), package_details)
 
     return packages
 
@@ -49,8 +58,6 @@ def get_distance(address_table, distance_table, first_address, second_address):
         return float(distance_table[first_index][second_index])
     else:
         return float(distance_table[second_index][first_index])
-
-
 
 if __name__ == '__main__':
     main()
