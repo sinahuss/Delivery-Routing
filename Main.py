@@ -16,7 +16,7 @@ def main():
     for i in range(1, 10):
         print(i, packages.get_value(i))
 
-    print(get_delivery_status(packages, 4, '09:00'))
+    print(get_delivery_status(packages, 6, '10:00')[0].strftime('%H:%M'))
 
 def deliver_packages(packages, address_table, distance_table):
     return
@@ -31,26 +31,32 @@ def get_delivery_status(packages, package_id, time_str):
     input_time = datetime.strptime(time_str, '%H:%M')
 
     previous_status = status_history[0]
-    for status in status_history:
-        status_time = datetime.strptime(status[0], '%H:%M')
+    for status_time, status in status_history:
         if input_time < status_time:
             return previous_status
-        previous_status = status
+        previous_status = status_time, status
 
     return previous_status
 
 # Read csv file and add each package to packages HashTable
 # The package ID will be the key, and it is the first number on each line
+# Initialize the status history, with some exceptions for certain packages
 # Accessing package details will be O(1) time
 def load_packages():
     packages = HashTable()
     with open('Docs/WGUPS Package File.csv', mode='r') as file:
         csv_file = csv.reader(file)
         for line in csv_file:
+            package_id = int(line[0])
             package_details = line[1:]
-            package_details.append([('08:00', 'At the hub')])
-            # packages.set_value(int(line[0]), [line[1:], [('8:00', 'At the hub')]])
-            packages.set_value(int(line[0]), package_details)
+
+            if package_id in {6, 25, 28, 32}:
+                status_time = datetime.strptime('09:05', '%H:%M')
+            else:
+                status_time = datetime.strptime('08:00', '%H:%M')
+
+            package_details.append([(status_time, 'At the hub')])
+            packages.set_value(package_id, package_details)
 
     return packages
 
