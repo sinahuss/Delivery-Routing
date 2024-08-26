@@ -2,6 +2,7 @@
 # C950 - Data Structures and Algorithms II
 
 import csv
+from datetime import datetime
 
 from HashTable import HashTable
 
@@ -15,8 +16,28 @@ def main():
     for i in range(1, 10):
         print(i, packages.get_value(i))
 
+    print(get_delivery_status(packages, 4, '09:00'))
+
 def deliver_packages(packages, address_table, distance_table):
     return
+
+# Get the delivery status of a given package at a given time
+# First find the package, then its status history
+# Iterate through history, finding the most recent one to the given time
+def get_delivery_status(packages, package_id, time_str):
+    package = packages.get_value(package_id)
+    status_history = package[-1]
+
+    input_time = datetime.strptime(time_str, '%H:%M')
+
+    previous_status = status_history[0]
+    for status in status_history:
+        status_time = datetime.strptime(status[0], '%H:%M')
+        if input_time < status_time:
+            return previous_status
+        previous_status = status
+
+    return previous_status
 
 # Read csv file and add each package to packages HashTable
 # The package ID will be the key, and it is the first number on each line
@@ -33,8 +54,8 @@ def load_packages():
 
     return packages
 
+# Read csv file and add distances to 2D matrix distance table
 # Create an address HashTable so that addresses can be indexed, allowing easy access
-# Distance table is a 2D matrix,
 # Using address table makes accessing distance O(1) time
 def load_distance_table():
     address_table = HashTable()

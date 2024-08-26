@@ -27,4 +27,3 @@ class HashTable:
                 return
 
         bucket.append((key, value))
-
